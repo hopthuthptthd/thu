@@ -1,0 +1,368 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f1efec;
+}
+
+/* Đổi --size để phóng to / thu nhỏ toàn bộ hộp thư */
+.mailbox {
+  --size: 1;
+  --red: #e8473f;
+  --red-dark: #c93a33;
+  --red-light: #f06a60;
+  --metal: #3a3a3a;
+  position: relative;
+  width: calc(150px * var(--size));
+  height: calc(330px * var(--size));
+  font-size: calc(1px * var(--size));
+  /* Thêm mới: để dùng được với thẻ <a> */
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Thân hộp có nắp vòm */
+.body {
+  position: absolute;
+  top: 0; left: 0;
+  width: 150em;
+  height: 190em;
+  background: var(--red);
+  border-radius: 75em 75em 6em 6em;
+  box-shadow: inset -10em 0 0 rgba(0,0,0,.07), inset 0 -4em 0 rgba(0,0,0,.08);
+}
+
+
+
+/* Khe bỏ thư */
+.slot {
+  position: absolute;
+  top: 58em; left: 16em;
+  width: 118em; height: 30em;
+  background: var(--red-light);
+  border-radius: 3em;
+  box-shadow: 0 2em 0 rgba(0,0,0,.12);
+}
+.slot::after {
+  content: "";
+  position: absolute;
+  top: 9em; left: 6em; right: 6em;
+  height: 9em;
+  background: var(--red-dark);
+  border-radius: 2em;
+  box-shadow: inset 0 3em 0 rgba(0,0,0,.2);
+}
+
+/* Cửa lấy thư */
+.door {
+  position: absolute;
+  top: 100em; left: 16em;
+  width: 118em; height: 80em;
+  background: var(--red-light);
+  border-radius: 3em;
+}
+.door::before {
+  content: "";
+  position: absolute;
+  inset: 8em;
+  background: var(--red);
+  border: 2em solid rgba(255,255,255,.18);
+  border-radius: 2em;
+}
+/* Ổ khóa */
+.lock {
+  position: absolute;
+  top: 22em; left: 50%;
+  width: 12em; height: 14em;
+  transform: translateX(-50%);
+  background: var(--red-dark);
+  border-radius: 2em;
+  z-index: 1;
+}
+.lock::after {
+  content: "";
+  position: absolute;
+  left: 5em; top: 14em;
+  width: 2em; height: 6em;
+  background: var(--red-dark);
+}
+
+/* Cổ nối + cột đỡ */
+.neck {
+  position: absolute;
+  top: 190em; left: 50%;
+  width: 100em; height: 8em;
+  transform: translateX(-50%);
+  background: var(--metal);
+  border-radius: 0 0 2em 2em;
+}
+.pole {
+  position: absolute;
+  top: 198em; left: 50%;
+  width: 18em; height: 120em;
+  transform: translateX(-50%);
+  background: var(--metal);
+  box-shadow: inset 5em 0 0 rgba(255,255,255,.08);
+}
+.base {
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 84em; height: 10em;
+  transform: translateX(-50%);
+  background: var(--metal);
+  border-radius: 2em;
+}
+
+/* Hiệu ứng thư rơi vào khe */
+.letter {
+  position: absolute;
+  top: 66em; left: 38em;
+  width: 74em; height: 44em;
+  background: #fff;
+  border-radius: 3em;
+  opacity: 0;
+  z-index: 0;
+}
+.mailbox:hover .letter,
+.mailbox:focus-visible .letter,
+.mailbox.sent .letter {   /* .sent: được JS thêm vào khi bấm (chạy cả trên điện thoại) */
+  animation: drop 1.2s ease-in forwards;
+}
+@keyframes drop {
+  0%   { opacity: 1; transform: translateY(-50em); }
+  70%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(14em); }
+}
+.body, .label, .slot, .door { z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mailbox:hover .letter,
+  .mailbox.sent .letter { animation: none; }
+}
+
+/* Dòng chữ dưới hòm thư */
+/* Dòng chữ dưới hòm thư */
+.caption {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 14em;              /* gần hòm thư hơn (trước 24em) */
+  transform: translateX(-50%);
+  width: max-content;
+  text-align: center;
+  pointer-events: none;
+}
+.caption-title {
+  margin: 0 0 4em;               /* 2 dòng sát nhau hơn */
+  font: 700 38em/1.2 "Dancing Script", Georgia, serif;
+  letter-spacing: 0.5px;         /* trước là 1em = 26px */
+  color: #f0b429;
+}
+.caption-hint {
+  margin: 0;
+  font: 500 15em/1.4 "Quicksand", Arial, sans-serif;
+  font-style: normal;            /* bỏ nghiêng để dấu không lệch */
+  letter-spacing: 0.3px;
+  color: #8a8a8a;
+}
+
+.mailbox {
+  /* ...giữ nguyên các dòng cũ... */
+  margin-bottom: 90em;
+}
+
+.caption .caption-hint {
+  position: static !important;
+  bottom: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.caption-title { margin: 0 0 0; }
+.caption-hint  { margin-top: -4em; } /* âm nếu muốn dính sát hơn */ 
+
+.school-name {
+  position: absolute;
+  bottom: 100%;            /* nằm ngay trên đỉnh hòm thư */
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 0 20px;        /* khoảng cách với hòm thư, chỉnh tùy ý */
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: #c0392b;
+}
+
+.school-title {
+  font-weight: 800;                 /* chữ đậm hơn */
+  letter-spacing: 2px;
+  color: #c0392b;
+
+  /* làm nét chữ dày, "đầy" hơn */
+  -webkit-text-stroke: 1.5px #c0392b;
+
+  /* đổ bóng nhiều lớp, tạo cảm giác chữ nổi khối */
+  text-shadow:
+    1px 1px 0 #922b21,
+    2px 2px 0 #922b21,
+    3px 3px 0 #7b241c,
+    4px 4px 6px rgba(0, 0, 0, 0.35);
+}
+
+.school-name {
+  font-weight: 700;
+  color: #c0392b;
+  letter-spacing: 2px;
+
+  /* viền chữ cùng màu để nét dày, "đầy" hơn */
+  -webkit-text-stroke: 1.5px #c0392b;
+
+  /* đổ bóng nhiều lớp, tạo cảm giác chữ nổi khối */
+  text-shadow:
+    1px 1px 0 #922b21,
+    2px 2px 0 #922b21,
+    3px 3px 0 #7b241c,
+    5px 5px 8px rgba(0, 0, 0, 0.35);
+} 
+
+/* ================= HIỆU ỨNG MỚI (không sửa rule cũ) ================= */
+
+/* --- Hòm thư: xuất hiện (nảy lên) rồi lơ lửng nhẹ --- */
+.mailbox {
+  animation:
+    mailboxIn 1.1s cubic-bezier(.34, 1.56, .64, 1) .2s backwards,
+    mailboxFloat 4s ease-in-out 1.5s infinite;
+  transition: scale .3s ease;
+}
+.mailbox:hover { scale: 1.04; }
+
+@keyframes mailboxIn {
+  0%   { opacity: 0; transform: translateY(120px) scale(.3) rotate(-8deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+@keyframes mailboxFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* --- Tên trường: rơi xuống + sáng nhẹ --- */
+.school-name {
+  animation:
+    dropIn .9s cubic-bezier(.34, 1.56, .64, 1) .9s backwards,
+    nameGlow 3s ease-in-out 2s infinite;
+}
+@keyframes dropIn {
+  from { opacity: 0; translate: 0 -50px; scale: .8; }
+  to   { opacity: 1; translate: 0 0;      scale: 1; }
+}
+@keyframes nameGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(192, 57, 43, 0)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(192, 57, 43, .45)); }
+}
+
+/* Icon hai bên tên trường (tắt viền/bóng của chữ để emoji không bị xấu) */
+.school-name .deco {
+  display: inline-block;
+  margin: 0 .3em;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  letter-spacing: 0;
+}
+.deco-l { animation: swing 2.4s ease-in-out 1.8s infinite; }
+.deco-r { animation: swing 2.4s ease-in-out 2.2s infinite reverse; }
+@keyframes swing {
+  0%, 100% { rotate: -12deg; }
+  50%      { rotate: 12deg; }
+}
+
+/* --- Dòng chữ vàng: hiện lên + ánh sáng chạy ngang --- */
+.caption-title {
+  animation: fadeUp .9s ease-out 1.3s backwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.shimmer {
+  display: inline-block;
+  padding: .05em .1em;
+  background: linear-gradient(90deg, #f0b429 0%, #ffe08a 40%, #f0b429 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer { to { background-position: -200% center; } }
+
+.ico-heart {
+  display: inline-block;
+  margin: 0 .25em;
+  font-size: .75em;
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.3); }
+  30%      { transform: scale(1); }
+  45%      { transform: scale(1.2); }
+}
+
+/* --- Dòng gợi ý: hiện lên + nhấp nháy, icon tay nhấp nhô --- */
+.caption-hint {
+  animation:
+    fadeUp .8s ease-out 1.7s backwards,
+    hintPulse 2.4s ease-in-out 2.6s infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .55; }
+}
+.ico-point {
+  display: inline-block;
+  animation: pointUp 1s ease-in-out infinite;
+}
+@keyframes pointUp {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* --- Icon bay quanh hòm thư (tự co giãn theo --size) --- */
+.float-icon {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;      /* không cản việc bấm vào hòm thư */
+  animation: floatUp 5s ease-in infinite;
+}
+.fi-1 { left: -50%;  top: 38%; font-size: 52em; animation-delay: 1.8s; }
+.fi-2 { right: -45%; top: 28%; font-size: 46em; animation-delay: 2.6s; }
+.fi-3 { left: -32%;  top: 12%; font-size: 40em; animation-delay: 3.4s; }
+.fi-4 { right: -40%; top: 52%; font-size: 50em; animation-delay: 4.2s; }
+.fi-5 { left: -45%;  top: 62%; font-size: 44em; animation-delay: 5s; }
+
+@keyframes floatUp {
+  0%   { opacity: 0; translate: 0 calc(var(--size) * 30px);   scale: .5; rotate: 0deg; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; translate: 0 calc(var(--size) * -150px); scale: 1.2; rotate: 25deg; }
+}
+
+/* --- Người dùng tắt hiệu ứng: bỏ hết animation mới --- */
+@media (prefers-reduced-motion: reduce) {
+  .mailbox, .school-name, .caption-title, .caption-hint,
+  .shimmer, .ico-heart, .ico-point, .deco { animation: none; }
+  .float-icon { display: none; }
+}
+
+.shimmer {
+  font-family: 'Playfair Display', 'Times New Roman', serif; /* nếu rule cũ đã có font-family thì thay bằng dòng này */
+  display: inline-block;
+  line-height: 1.5;
+  padding: 0.15em 0.1em 0;
+}
